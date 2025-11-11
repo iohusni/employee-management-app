@@ -1,4 +1,4 @@
-import type { employeeType } from '@/types/employee-types'
+import type { createEmployeeSchemaType } from '@/schema/employee-schema'
 import axios from 'axios'
 
 const URL = 'http://localhost:8000'
@@ -7,11 +7,11 @@ const api = axios.create({
 })
 
 export const getEmployees = async () => {
-  const response = await api.get<employeeType[]>('/employees')
+  const response = await api.get<createEmployeeSchemaType[]>('/employees')
   return response.data
 }
 
 export const getEmployee = async (id: number) => {
-  const response = await api.get<employeeType>(`/employees/${id}`)
+  const response = await api.get<createEmployeeSchemaType>(`/employees/${id}`)
   return response.data
 }
