@@ -13,5 +13,8 @@ export const getEmployees = async () => {
 
 export const getEmployee = async (id: number) => {
   const response = await api.get<createEmployeeSchemaType>(`/employees/${id}`)
-  return response.data
+  return {
+    ...response.data,
+    action: 'update',
+  }
 }
