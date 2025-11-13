@@ -1,12 +1,21 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { Button } from './ui/button'
 import { PencilIcon, TrashIcon } from 'lucide-react'
-import type { createEmployeeSchemaType } from '@/schema/employee-schema'
+
+export type employeeType = {
+  name: string
+  email: string
+  phone: string
+  address: string | null
+  city: string | null
+  state: string | null
+  id: number
+}
 
 export const EmployeeColumns = (
-  handleEdit: (employee: createEmployeeSchemaType) => void,
-  handleDelete: (employee: createEmployeeSchemaType) => void,
-): ColumnDef<createEmployeeSchemaType>[] => [
+  handleEdit: (employee: employeeType) => void,
+  handleDelete: (employee: employeeType) => void,
+): ColumnDef<employeeType>[] => [
   {
     accessorKey: 'id',
     header: 'ID',

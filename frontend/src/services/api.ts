@@ -11,7 +11,7 @@ export const getEmployees = async () => {
   return response.data
 }
 
-export const getEmployee = async (id: number) => {
+export const getEmployeeById = async (id: number) => {
   const response = await api.get<createEmployeeSchemaType>(`/employees/${id}`)
   return {
     ...response.data,
