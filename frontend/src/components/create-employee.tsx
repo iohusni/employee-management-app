@@ -19,11 +19,19 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import FormField from './form-field'
 import { useGetEmployeeByIdQuery } from '@/services/queries'
 import { useEffect } from 'react'
+import {
+  createEmployeeMutation,
+  updateEmployeeMutation,
+} from '@/services/mutation'
 
 const CreateEmployees = () => {
   const { isOpen, setIsOpen, employeeId, setEmployeeId } = useEmployeeStore()
 
   const employeeData = useGetEmployeeByIdQuery()
+  const createEmployee = createEmployeeMutation()
+  const updateEmployee = updateEmployeeMutation()
+
+  const isPending = createEmployee.isPending || updateEmployee.isPending
 
   const form = useForm<createEmployeeSchemaType>({
     resolver: zodResolver(createEmployeeSchema),
@@ -50,8 +58,19 @@ const CreateEmployees = () => {
   }
 
   const onSubmit: SubmitHandler<createEmployeeSchemaType> = (data) => {
-    console.log(data)
-    handleSuccess()
+    if (data.action === 'create') {
+      createEmployee.mutate(data, {
+        onSuccess: () => {
+          handleSuccess()
+        },
+      })
+    } else if (data.action === 'update') {
+      updateEmployee.mutate(data, {
+        onSuccess: () => {
+          handleSuccess()
+        },
+      })
+    }
   }
 
   return (
@@ -80,7 +99,12 @@ const CreateEmployees = () => {
                 <FormField name="state" label="State" />
 
                 <DialogFooter>
-                  <Button type="submit" className="w-full">
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={isPending}
+                    isLoading={isPending}
+                  >
                     {employeeId ? 'Edit Employee' : 'Create Employee'}
                   </Button>
                 </DialogFooter>
