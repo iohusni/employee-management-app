@@ -17,27 +17,55 @@ import { useEmployeeStore } from '@/store/employee-store'
 import { FormProvider, useForm, type SubmitHandler } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import FormField from './form-field'
+import { useGetEmployeeByIdQuery } from '@/services/queries'
+import { useEffect } from 'react'
 
 const CreateEmployees = () => {
-  const { isOpen, setIsOpen } = useEmployeeStore()
+  const { isOpen, setIsOpen, employeeId, setEmployeeId } = useEmployeeStore()
+
+  const employeeData = useGetEmployeeByIdQuery()
 
   const form = useForm<createEmployeeSchemaType>({
     resolver: zodResolver(createEmployeeSchema),
     defaultValues: defaultEmployeeSchema,
   })
 
+  useEffect(() => {
+    if (!!employeeId && employeeData.data) {
+      form.reset(employeeData?.data as createEmployeeSchemaType)
+    }
+  }, [employeeData.data, form, employeeId])
+
+  const handleDialogOpenChange = (open: boolean) => {
+    setIsOpen(open)
+
+    if (!open) {
+      setEmployeeId(null)
+      form.reset(defaultEmployeeSchema)
+    }
+  }
+
+  const handleSuccess = () => {
+    handleDialogOpenChange(false)
+  }
+
   const onSubmit: SubmitHandler<createEmployeeSchemaType> = (data) => {
     console.log(data)
+    handleSuccess()
   }
 
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={setIsOpen}>
+      <Dialog open={isOpen} onOpenChange={handleDialogOpenChange}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Create Employee</DialogTitle>
+            <DialogTitle>
+              {employeeId ? 'Edit Employee' : 'Create Employee'}
+            </DialogTitle>
             <DialogDescription>
-              Create a new employee by filling out the form below.
+              {employeeId
+                ? 'Edit an employee by filling out the form below.'
+                : 'Create a new employee by filling out the form below.'}
             </DialogDescription>
           </DialogHeader>
 
@@ -53,7 +81,7 @@ const CreateEmployees = () => {
 
                 <DialogFooter>
                   <Button type="submit" className="w-full">
-                    Create Employee
+                    {employeeId ? 'Edit Employee' : 'Create Employee'}
                   </Button>
                 </DialogFooter>
               </div>
