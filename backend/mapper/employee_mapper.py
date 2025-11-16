@@ -1,5 +1,7 @@
 from pydantic import BaseModel  # type: ignore
-from typing import Optional  # type: ignore
+from typing import Optional, Generic, TypeVar, List  # type: ignore
+
+T = TypeVar('T')
 
 
 class EmployeeCreateMapper(BaseModel):
@@ -17,3 +19,11 @@ class EmployeeResponseMapper(EmployeeCreateMapper):
     class Config:
         # allows returning SQLAlchemy model instances (Pydantic v2)
         from_attributes = True
+
+
+class PaginatedResponse(BaseModel, Generic[T]):
+    items: List[T]
+    total: int
+    page: int
+    page_size: int
+    total_pages: int

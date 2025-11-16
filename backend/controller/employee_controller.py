@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status  # type: ignore
+from fastapi import APIRouter, Depends, HTTPException, status, Query  # type: ignore
 from sqlalchemy.ext.asyncio import AsyncSession  # type: ignore
 from db.connect_db import AsyncSessionLocal
 from services import employee_services
-from mapper.employee_mapper import EmployeeCreateMapper, EmployeeResponseMapper
+from mapper.employee_mapper import EmployeeCreateMapper, EmployeeResponseMapper, PaginatedResponse
+from typing import Optional  # type: ignore
 
 router = APIRouter(prefix="/employees", tags=["Employees"])
 
@@ -19,11 +20,23 @@ async def create_employee(employee: EmployeeCreateMapper, db: AsyncSession = Dep
     return new_employee
 
 
-# ✅ Get All Employees
-@router.get("/", response_model=list[EmployeeResponseMapper])
-async def get_employees(db: AsyncSession = Depends(get_db)):
-    employees = await employee_services.get_all_employees(db)
-    return employees
+# ✅ Get All Employees with Pagination and Sorting
+@router.get("/", response_model=PaginatedResponse[EmployeeResponseMapper])
+async def get_employees(
+    db: AsyncSession = Depends(get_db),
+    page: int = Query(1, ge=1, description="Page number (starts from 1)"),
+    page_size: int = Query(10, description="Number of items per page (10, 25, 50, 100)"),
+    sort_by: Optional[str] = Query(None, description="Column to sort by (id, name, email, phone, address, city, state)"),
+    sort_order: str = Query("asc", description="Sort order (asc or desc)")
+):
+    result = await employee_services.get_all_employees(
+        db=db,
+        page=page,
+        page_size=page_size,
+        sort_by=sort_by,
+        sort_order=sort_order
+    )
+    return result
 
 
 # ✅ Get Employee by ID
