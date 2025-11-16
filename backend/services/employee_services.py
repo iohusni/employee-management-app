@@ -63,13 +63,13 @@ async def get_all_employees(
     
     # Execute query
     result = await db.execute(query)
-    items = result.scalars().all()
+    employees = result.scalars().all()
     
     # Calculate total pages
     total_pages = math.ceil(total / page_size) if total > 0 else 0
     
     return {
-        "items": items,
+        "employees": employees,
         "total": total,
         "page": page,
         "page_size": page_size,
