@@ -22,7 +22,7 @@ class EmployeeResponseMapper(EmployeeCreateMapper):
 
 
 class PaginatedResponse(BaseModel, Generic[T]):
-    items: List[T]
+    employees: List[T]
     total: int
     page: int
     page_size: int
