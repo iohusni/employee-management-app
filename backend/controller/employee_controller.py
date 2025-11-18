@@ -24,8 +24,8 @@ async def create_employee(employee: EmployeeCreateMapper, db: AsyncSession = Dep
 @router.get("/", response_model=PaginatedResponse[EmployeeResponseMapper])
 async def get_employees(
     db: AsyncSession = Depends(get_db),
-    page: int = Query(1, ge=1, description="Page number (starts from 1)"),
-    page_size: int = Query(10, description="Number of items per page (10, 25, 50, 100)"),
+    page: int = 1,
+    page_size: int = 10,
     sort_by: Optional[str] = Query(None, description="Column to sort by (id, name, email, phone, address, city, state)"),
     sort_order: str = Query("asc", description="Sort order (asc or desc)")
 ):

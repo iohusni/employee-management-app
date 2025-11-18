@@ -18,15 +18,14 @@ async def create_employee(db: AsyncSession, employee_data: EmployeeCreateMapper)
 # Get All Employees with Pagination and Sorting
 async def get_all_employees(
     db: AsyncSession,
-    page: int = 1,
-    page_size: int = 10,
+    page: int,
+    page_size: int,
     sort_by: Optional[str] = None,
     sort_order: str = "asc"
 ):
-    # Validate page_size (must be one of: 10, 25, 50, 100)
-    valid_page_sizes = [10, 25, 50, 100]
-    if page_size not in valid_page_sizes:
-        page_size = 10
+    # Validate page_size is a positive integer (using SQLAlchemy ORM, no default values)
+    # The validation is handled at the controller level via Query(ge=1)
+    # Here we just ensure it's used directly without any default fallback
     
     # Validate sort_by column (must be a valid Employee column)
     valid_sort_columns = ["id", "name", "email", "phone", "address", "city", "state"]
