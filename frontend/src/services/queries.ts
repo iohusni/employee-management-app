@@ -1,11 +1,17 @@
 import { useEmployeeStore } from '@/store/employee-store'
 import { getEmployees, getEmployeeById } from './api'
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import type { employeesResponseType } from '@/types/employee-type'
+import { usePagination } from '@/store/Pagination'
 
 export const useGetEmployeesQuery = () => {
-  return useQuery({
-    queryKey: ['employees'],
-    queryFn: () => getEmployees(),
+  const { pagination } = usePagination()
+  return useQuery<employeesResponseType>({
+    queryKey: ['employees', pagination],
+    queryFn: () => getEmployees(pagination),
+    enabled: !!pagination,
+    placeholderData: keepPreviousData,
+    refetchOnMount: false,
   })
 }
 

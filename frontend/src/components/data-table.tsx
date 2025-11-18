@@ -3,6 +3,7 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
+  getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table'
 
@@ -29,32 +30,74 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { SearchIcon } from 'lucide-react'
+import type { employeesResponseType } from '@/types/employee-type'
+import { usePagination } from '@/store/Pagination'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  data: employeesResponseType
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const { updatePagination, pagination } = usePagination()
+
+  // const table = useReactTable({
+  //   data,
+  //   columns,
+  //   manualPagination: true,
+  //   pageCount: employeeCount
+  //     ? Math.ceil(employeeCount / pagination.pageSize)
+  //     : -1,
+  //   state: { pagination, rowSelection, columnFilters },
+  //   onColumnFiltersChange: setColumnFilters,
+  //   onRowSelectionChange: setRowSelection,
+  //   onPaginationChange: (updaterOrValue) => {
+  //     if (typeof updaterOrValue === 'function') {
+  //       updatePagination(updaterOrValue(pagination))
+  //     } else {
+  //       updatePagination(updaterOrValue)
+  //     }
+  //   },
+  //   getCoreRowModel: getCoreRowModel(),
+  //   getPaginationRowModel: getPaginationRowModel(),
+  //   getFilteredRowModel: getFilteredRowModel(),
+  // })
+
   const table = useReactTable({
-    data,
+    data: (data?.employees as TData[]) || [],
     columns,
+    manualPagination: true,
+    pageCount: Math.ceil(data?.total / pagination.pageSize) || -1,
+    state: { pagination },
+    onPaginationChange: (updaterOrValue) => {
+      if (typeof updaterOrValue === 'function') {
+        updatePagination(updaterOrValue(pagination))
+      } else {
+        updatePagination(updaterOrValue)
+      }
+    },
     getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   })
 
   return (
     <>
       <div className="w-full">
-        <div className="flex items-center justify-between py-4">
+        {/* <div className="flex items-center justify-between py-4">
           <div>
             <Select
               value={`${table.getState().pagination.pageSize}`}
               onValueChange={(value) => {
-                table.setPageSize(Number(value))
+                const newPageSize = Number(value)
+                table.setPageSize(newPageSize)
+                updatePagination({
+                  pageIndex: 0,
+                  pageSize: newPageSize,
+                })
               }}
             >
               <SelectTrigger className="h-8 w-[70px]">
@@ -86,7 +129,7 @@ export function DataTable<TData, TValue>({
               <SearchIcon />
             </InputGroupAddon>
           </InputGroup>
-        </div>
+        </div> */}
 
         <div className="overflow-hidden rounded-md border">
           <Table>

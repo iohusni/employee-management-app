@@ -7,7 +7,7 @@ import { useAlert } from '@/store/alert-dialog-store'
 import { AlertDialogComponent } from './alert-dialog'
 
 const ListAllEmployees = () => {
-  const { data: employees } = useGetEmployeesQuery()
+  const { data } = useGetEmployeesQuery()
   const { setEmployeeId, setIsOpen } = useEmployeeStore()
   const deleteEmployee = deleteEmployeeMutation()
 
@@ -31,7 +31,18 @@ const ListAllEmployees = () => {
 
   return (
     <>
-      <DataTable columns={columns} data={(employees as employeeType[]) || []} />
+      <DataTable
+        columns={columns}
+        data={
+          data || {
+            employees: [],
+            total: 0,
+            page: 1,
+            page_size: 10,
+            total_pages: 1,
+          }
+        }
+      />
       <AlertDialogComponent />
     </>
   )

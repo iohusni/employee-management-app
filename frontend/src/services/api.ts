@@ -1,4 +1,8 @@
 import type { createEmployeeSchemaType } from '@/schema/employee-schema'
+import type {
+  employeesResponseType,
+  paginationInitial,
+} from '@/types/employee-type'
 import axios from 'axios'
 
 const URL = 'http://localhost:8000'
@@ -6,8 +10,13 @@ const api = axios.create({
   baseURL: URL,
 })
 
-export const getEmployees = async () => {
-  const response = await api.get<createEmployeeSchemaType[]>('/employees')
+export const getEmployees = async (params: paginationInitial) => {
+  const page = params.pageIndex + 1
+  const pageSize = params.pageSize
+
+  const response = await api.get<employeesResponseType>(
+    `/employees/?page=${page}&page_size=${pageSize}`,
+  )
   return response.data
 }
 
@@ -24,7 +33,7 @@ export const deleteEmployee = async (id: number) => {
   return response.data
 }
 
-export const createEmployee = async (employee: createEmployeeSchemaType) => {
+export const createEmployee = async (employee: employeesResponseType) => {
   const response = await api.post(`/employees`, employee)
   return response.data
 }
