@@ -87,7 +87,7 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <div className="w-full">
-        {/* <div className="flex items-center justify-between py-4">
+        <div className="flex items-center justify-between py-4">
           <div>
             <Select
               value={`${table.getState().pagination.pageSize}`}
@@ -129,7 +129,7 @@ export function DataTable<TData, TValue>({
               <SearchIcon />
             </InputGroupAddon>
           </InputGroup>
-        </div> */}
+        </div>
 
         <div className="overflow-hidden rounded-md border">
           <Table>
