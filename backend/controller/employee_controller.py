@@ -27,7 +27,7 @@ async def get_employees(
     page: int = Query(..., ge=1, description="Page number (starts from 1, required)"),
     page_size: int = Query(..., ge=1, description="Number of items per page (must be positive integer, required)"),
     sort_by: Optional[str] = Query(None, description="Column to sort by (id, name, email, phone, address, city, state)"),
-    sort_order: str = Query("asc", description="Sort order (asc or desc)")
+    sort_order: str = Query("desc", description="Sort order (asc or desc)")
 ):
     result = await employee_services.get_all_employees(
         db=db,

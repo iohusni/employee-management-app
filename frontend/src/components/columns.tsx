@@ -1,7 +1,8 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { Button } from './ui/button'
-import { PencilIcon, TrashIcon } from 'lucide-react'
+import { PencilIcon, TrashIcon, ArrowUpDown } from 'lucide-react'
 import { Checkbox } from '@/components/ui/checkbox'
+import { useSorting } from '@/store/sorting-store'
 
 export type employeeType = {
   name: string
@@ -41,31 +42,175 @@ export const EmployeeColumns = (
   },
   {
     accessorKey: 'id',
-    header: 'ID',
+    header: ({ table }) => {
+      const handleSort = () => {
+        const { sorting } = useSorting.getState()
+        const isCurrentColumn = sorting.sortBy === 'id'
+
+        if (!isCurrentColumn) {
+          // Different column or not sorted: sort descending
+          table.setSorting([{ id: 'id', desc: true }])
+        } else if (sorting.sortOrder === 'desc') {
+          // Currently descending: sort ascending
+          table.setSorting([{ id: 'id', desc: false }])
+        } else {
+          // Currently ascending: clear sorting
+          table.setSorting([])
+        }
+      }
+
+      return (
+        <Button variant="ghost" onClick={handleSort}>
+          ID
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: 'name',
-    header: 'Name',
+    header: ({ table }) => {
+      const handleSort = () => {
+        const { sorting } = useSorting.getState()
+        const isCurrentColumn = sorting.sortBy === 'name'
+
+        if (!isCurrentColumn) {
+          table.setSorting([{ id: 'name', desc: true }])
+        } else if (sorting.sortOrder === 'desc') {
+          table.setSorting([{ id: 'name', desc: false }])
+        } else {
+          table.setSorting([])
+        }
+      }
+
+      return (
+        <Button variant="ghost" onClick={handleSort}>
+          Name
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: 'email',
-    header: 'Email',
+    header: ({ table }) => {
+      const handleSort = () => {
+        const { sorting } = useSorting.getState()
+        const isCurrentColumn = sorting.sortBy === 'email'
+
+        if (!isCurrentColumn) {
+          table.setSorting([{ id: 'email', desc: true }])
+        } else if (sorting.sortOrder === 'desc') {
+          table.setSorting([{ id: 'email', desc: false }])
+        } else {
+          table.setSorting([])
+        }
+      }
+
+      return (
+        <Button variant="ghost" onClick={handleSort}>
+          Email
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
+    cell: ({ row }) => <div className="lowercase">{row.getValue('email')}</div>,
   },
   {
     accessorKey: 'phone',
-    header: 'Phone',
+    header: ({ table }) => {
+      const handleSort = () => {
+        const { sorting } = useSorting.getState()
+        const isCurrentColumn = sorting.sortBy === 'phone'
+
+        if (!isCurrentColumn) {
+          table.setSorting([{ id: 'phone', desc: true }])
+        } else if (sorting.sortOrder === 'desc') {
+          table.setSorting([{ id: 'phone', desc: false }])
+        } else {
+          table.setSorting([])
+        }
+      }
+
+      return (
+        <Button variant="ghost" onClick={handleSort}>
+          Phone
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: 'address',
-    header: 'Address',
+    header: ({ table }) => {
+      const handleSort = () => {
+        const { sorting } = useSorting.getState()
+        const isCurrentColumn = sorting.sortBy === 'address'
+
+        if (!isCurrentColumn) {
+          table.setSorting([{ id: 'address', desc: true }])
+        } else if (sorting.sortOrder === 'desc') {
+          table.setSorting([{ id: 'address', desc: false }])
+        } else {
+          table.setSorting([])
+        }
+      }
+
+      return (
+        <Button variant="ghost" onClick={handleSort}>
+          Address
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: 'city',
-    header: 'City',
+    header: ({ table }) => {
+      const handleSort = () => {
+        const { sorting } = useSorting.getState()
+        const isCurrentColumn = sorting.sortBy === 'city'
+
+        if (!isCurrentColumn) {
+          table.setSorting([{ id: 'city', desc: true }])
+        } else if (sorting.sortOrder === 'desc') {
+          table.setSorting([{ id: 'city', desc: false }])
+        } else {
+          table.setSorting([])
+        }
+      }
+
+      return (
+        <Button variant="ghost" onClick={handleSort}>
+          City
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: 'state',
-    header: 'State',
+    header: ({ table }) => {
+      const handleSort = () => {
+        const { sorting } = useSorting.getState()
+        const isCurrentColumn = sorting.sortBy === 'state'
+
+        if (!isCurrentColumn) {
+          table.setSorting([{ id: 'state', desc: true }])
+        } else if (sorting.sortOrder === 'desc') {
+          table.setSorting([{ id: 'state', desc: false }])
+        } else {
+          table.setSorting([])
+        }
+      }
+
+      return (
+        <Button variant="ghost" onClick={handleSort}>
+          State
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      )
+    },
   },
   {
     accessorKey: 'actions',

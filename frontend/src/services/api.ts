@@ -10,13 +10,21 @@ const api = axios.create({
   baseURL: URL,
 })
 
-export const getEmployees = async (params: paginationInitial) => {
+export const getEmployees = async (
+  params: paginationInitial,
+  sortBy?: string | null,
+  sortOrder?: 'asc' | 'desc',
+) => {
   const page = params.pageIndex + 1
   const pageSize = params.pageSize
 
-  const response = await api.get<employeesResponseType>(
-    `/employees/?page=${page}&page_size=${pageSize}`,
-  )
+  let url = `/employees/?page=${page}&page_size=${pageSize}`
+
+  if (sortBy) {
+    url += `&sort_by=${sortBy}&sort_order=${sortOrder || 'asc'}`
+  }
+
+  const response = await api.get<employeesResponseType>(url)
   return response.data
 }
 

@@ -21,7 +21,7 @@ async def get_all_employees(
     page: int,
     page_size: int,
     sort_by: Optional[str] = None,
-    sort_order: str = "asc"
+    sort_order: str = "desc"
 ):
     # Validate page_size is a positive integer (using SQLAlchemy ORM, no default values)
     # The validation is handled at the controller level via Query(ge=1)
@@ -34,9 +34,9 @@ async def get_all_employees(
         sort_column = getattr(Employee, sort_by.lower())
     
     # Validate sort_order
-    sort_order_lower = sort_order.lower() if sort_order else "asc"
+    sort_order_lower = sort_order.lower() if sort_order else "desc"
     if sort_order_lower not in ["asc", "desc"]:
-        sort_order_lower = "asc"
+        sort_order_lower = "desc"
     
     # Build base query
     query = select(Employee)
@@ -48,8 +48,8 @@ async def get_all_employees(
         else:
             query = query.order_by(asc(sort_column))
     else:
-        # Default sorting by id ascending
-        query = query.order_by(asc(Employee.id))
+        # Default sorting by id descending
+        query = query.order_by(desc(Employee.id))
     
     # Get total count
     count_query = select(func.count()).select_from(Employee)

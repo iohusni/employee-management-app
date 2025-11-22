@@ -4,7 +4,9 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getPaginationRowModel,
+  type SortingState,
   useReactTable,
+  getSortedRowModel,
 } from '@tanstack/react-table'
 
 import {
@@ -32,6 +34,8 @@ import {
 import { SearchIcon } from 'lucide-react'
 import type { employeesResponseType } from '@/types/employee-type'
 import { usePagination } from '@/store/Pagination'
+import { useSorting, convertSortingState } from '@/store/sorting-store'
+import { useState, useEffect } from 'react'
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[]
@@ -43,35 +47,52 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const { updatePagination, pagination } = usePagination()
+  const { sorting: sortingState, setSorting } = useSorting()
+  const [sorting, setSortingLocal] = useState<SortingState>([])
 
-  // const table = useReactTable({
-  //   data,
-  //   columns,
-  //   manualPagination: true,
-  //   pageCount: employeeCount
-  //     ? Math.ceil(employeeCount / pagination.pageSize)
-  //     : -1,
-  //   state: { pagination, rowSelection, columnFilters },
-  //   onColumnFiltersChange: setColumnFilters,
-  //   onRowSelectionChange: setRowSelection,
-  //   onPaginationChange: (updaterOrValue) => {
-  //     if (typeof updaterOrValue === 'function') {
-  //       updatePagination(updaterOrValue(pagination))
-  //     } else {
-  //       updatePagination(updaterOrValue)
-  //     }
-  //   },
-  //   getCoreRowModel: getCoreRowModel(),
-  //   getPaginationRowModel: getPaginationRowModel(),
-  //   getFilteredRowModel: getFilteredRowModel(),
-  // })
+  // Sync local sorting state with store
+  useEffect(() => {
+    if (sortingState.sortBy) {
+      setSortingLocal([
+        {
+          id: sortingState.sortBy,
+          desc: sortingState.sortOrder === 'desc',
+        },
+      ])
+    } else {
+      setSortingLocal([])
+    }
+  }, [sortingState])
+
+  // Update store when local sorting changes
+  const handleSortingChange = (
+    updaterOrValue: SortingState | ((old: SortingState) => SortingState),
+  ) => {
+    const newSorting =
+      typeof updaterOrValue === 'function'
+        ? updaterOrValue(sorting)
+        : updaterOrValue
+
+    setSortingLocal(newSorting)
+
+    // Convert to store format and update store
+    const convertedSorting = convertSortingState(newSorting)
+    setSorting(convertedSorting.sortBy, convertedSorting.sortOrder)
+
+    // Reset to first page when sorting changes
+    updatePagination({
+      ...pagination,
+      pageIndex: 0,
+    })
+  }
 
   const table = useReactTable({
     data: (data?.employees as TData[]) || [],
     columns,
     manualPagination: true,
+    manualSorting: true,
     pageCount: Math.ceil(data?.total / pagination.pageSize) || -1,
-    state: { pagination },
+    state: { pagination, sorting },
     onPaginationChange: (updaterOrValue) => {
       if (typeof updaterOrValue === 'function') {
         updatePagination(updaterOrValue(pagination))
@@ -79,9 +100,11 @@ export function DataTable<TData, TValue>({
         updatePagination(updaterOrValue)
       }
     },
+    onSortingChange: handleSortingChange,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getSortedRowModel: getSortedRowModel(),
   })
 
   return (
