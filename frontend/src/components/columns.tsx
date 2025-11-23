@@ -48,8 +48,8 @@ export const EmployeeColumns = (
         const isCurrentColumn = sorting.sortBy === 'id'
 
         if (!isCurrentColumn) {
-          // Different column or not sorted: sort descending
-          table.setSorting([{ id: 'id', desc: true }])
+          // Different column or not sorted: sort ascending
+          table.setSorting([{ id: 'id', desc: false }])
         } else if (sorting.sortOrder === 'desc') {
           // Currently descending: sort ascending
           table.setSorting([{ id: 'id', desc: false }])
@@ -75,7 +75,7 @@ export const EmployeeColumns = (
         const isCurrentColumn = sorting.sortBy === 'name'
 
         if (!isCurrentColumn) {
-          table.setSorting([{ id: 'name', desc: true }])
+          table.setSorting([{ id: 'name', desc: false }])
         } else if (sorting.sortOrder === 'desc') {
           table.setSorting([{ id: 'name', desc: false }])
         } else {
@@ -99,7 +99,7 @@ export const EmployeeColumns = (
         const isCurrentColumn = sorting.sortBy === 'email'
 
         if (!isCurrentColumn) {
-          table.setSorting([{ id: 'email', desc: true }])
+          table.setSorting([{ id: 'email', desc: false }])
         } else if (sorting.sortOrder === 'desc') {
           table.setSorting([{ id: 'email', desc: false }])
         } else {
@@ -124,7 +124,7 @@ export const EmployeeColumns = (
         const isCurrentColumn = sorting.sortBy === 'phone'
 
         if (!isCurrentColumn) {
-          table.setSorting([{ id: 'phone', desc: true }])
+          table.setSorting([{ id: 'phone', desc: false }])
         } else if (sorting.sortOrder === 'desc') {
           table.setSorting([{ id: 'phone', desc: false }])
         } else {
@@ -148,7 +148,7 @@ export const EmployeeColumns = (
         const isCurrentColumn = sorting.sortBy === 'address'
 
         if (!isCurrentColumn) {
-          table.setSorting([{ id: 'address', desc: true }])
+          table.setSorting([{ id: 'address', desc: false }])
         } else if (sorting.sortOrder === 'desc') {
           table.setSorting([{ id: 'address', desc: false }])
         } else {
@@ -172,7 +172,7 @@ export const EmployeeColumns = (
         const isCurrentColumn = sorting.sortBy === 'city'
 
         if (!isCurrentColumn) {
-          table.setSorting([{ id: 'city', desc: true }])
+          table.setSorting([{ id: 'city', desc: false }])
         } else if (sorting.sortOrder === 'desc') {
           table.setSorting([{ id: 'city', desc: false }])
         } else {
@@ -196,7 +196,7 @@ export const EmployeeColumns = (
         const isCurrentColumn = sorting.sortBy === 'state'
 
         if (!isCurrentColumn) {
-          table.setSorting([{ id: 'state', desc: true }])
+          table.setSorting([{ id: 'state', desc: false }])
         } else if (sorting.sortOrder === 'desc') {
           table.setSorting([{ id: 'state', desc: false }])
         } else {
